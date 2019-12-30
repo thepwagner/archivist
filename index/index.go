@@ -3,17 +3,18 @@ package index
 import (
 	"errors"
 	"fmt"
+	"os"
+	"path/filepath"
+
 	uuid "github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
 	archivist "github.com/thepwagner/archivist/proto"
-	"os"
-	"path/filepath"
 )
 
 type BlobID string
 
 type Index struct {
-	blobs map[BlobID]*archivist.Blob
+	blobs     map[BlobID]*archivist.Blob
 	filenames map[string][]BlobID
 }
 
@@ -39,7 +40,7 @@ func (i *Index) Add(path string) (BlobID, error) {
 
 	// Check for existing Blob:
 	base := filepath.Base(path)
-	if fnBlobIDs := i.filenames[base]; len(fnBlobIDs)> 0 {
+	if fnBlobIDs := i.filenames[base]; len(fnBlobIDs) > 0 {
 		log.WithField("blobs", len(fnBlobIDs)).Debug("Matched by filename")
 		for _, blobID := range fnBlobIDs {
 			if size == i.blobs[blobID].Size {
@@ -50,12 +51,12 @@ func (i *Index) Add(path string) (BlobID, error) {
 		}
 	}
 
-	blobUUID := uuid.NewV4()
-	blobID := BlobID(blobUUID.String())
+	blobUUID := uuid.NewV4().String()
+	blobID := BlobID(blobUUID)
 	log.WithField("blob_id", blobID).Debug("Adding to index")
 	i.blobs[blobID] = &archivist.Blob{
-		BlobId:               blobUUID.Bytes(),
-		Size:                 size,
+		Id:   blobUUID,
+		Size: size,
 		// TODO: read hashes
 	}
 	i.filenames[base] = append(i.filenames[base], blobID)

@@ -6,5 +6,6 @@ option go_package = "github.com/thepwagner/archivist";
 import "proto/files.proto";
 
 message Index {
-  repeated archivist.Blob blobs = 1;
+    repeated archivist.Blob blobs = 1;
+    map<string, archivist.IDs> blob_filenames = 2;
 }
