@@ -56,6 +56,7 @@ func (i *Index) Add(path string) (BlobID, error) {
 	i.blobs[blobID] = &archivist.Blob{
 		BlobId:               blobUUID.Bytes(),
 		Size:                 size,
+		// TODO: read hashes
 	}
 	i.filenames[base] = append(i.filenames[base], blobID)
 	return blobID, nil

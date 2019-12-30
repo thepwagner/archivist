@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package archivist;
+option go_package = "github.com/thepwagner/archivist";
+
+import "proto/files.proto";
+
+message Index {
+  repeated archivist.Blob blobs = 1;
+}

@@ -16,7 +16,8 @@ var addCmd = &cobra.Command{
 	Long: `Add file to index`,
 	Args: cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		idx := loadIndex()
+		idx, err := loadIndex()
+		if err != nil { return err }
 
 		paths := make(map[string]index.BlobID)
 		for _, path := range args {

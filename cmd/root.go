@@ -3,18 +3,17 @@ package cmd
 import (
   "fmt"
   "github.com/sirupsen/logrus"
+  "github.com/spf13/cobra"
   "github.com/thepwagner/archivist/index"
   "os"
-  "github.com/spf13/cobra"
+  "time"
 
   homedir "github.com/mitchellh/go-homedir"
   "github.com/spf13/viper"
-
 )
 
 
 var cfgFile string
-
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -35,6 +34,10 @@ func Execute() {
 func init() {
   cobra.OnInitialize(initConfig)
   rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.archivist.yaml)")
+
+  rootCmd.PersistentFlags().String( "index", "", "index file")
+  viper.BindPFlag("index", rootCmd.PersistentFlags().Lookup("index"))
+  viper.SetDefault("index", "./index.pb")
 }
 
 
@@ -59,14 +62,23 @@ func initConfig() {
   viper.AutomaticEnv() // read in environment variables that match
 
   // If a config file is found, read it in.
-  if err := viper.ReadInConfig(); err == nil {
-    fmt.Println("Using config file:", viper.ConfigFileUsed())
-  }
-
   logrus.SetLevel(logrus.DebugLevel)
-  logrus.StandardLogger().Formatter.(*logrus.TextFormatter).ForceColors = true
+  if err := viper.ReadInConfig(); err == nil {
+    logrus.WithField("cfg", viper.ConfigFileUsed()).Debug("Using config file")
+  }
 }
 
-func loadIndex() *index.Index {
-  return index.NewIndex()
+func loadIndex() (*index.Index, error) {
+  indexFile := viper.GetString("index")
+
+  start := time.Now()
+  idx, err := index.LoadIndex(indexFile)
+  if err != nil {
+    return nil, fmt.Errorf("loading index: %w", err)
+  }
+  logrus.WithFields(logrus.Fields{
+    "path": indexFile,
+    "dur": time.Since(start).Truncate(time.Millisecond).Seconds(),
+  }).Debug("Loaded index")
+  return idx, nil
 }
