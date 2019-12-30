@@ -3,8 +3,9 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/thepwagner/archivist/index"
 	"os"
+
+	"github.com/thepwagner/archivist/index"
 
 	"github.com/spf13/cobra"
 )
@@ -13,13 +14,11 @@ import (
 var addCmd = &cobra.Command{
 	Use:   "add [file...]",
 	Short: "Add a file to the index",
-	Long: `Add file to index`,
-	Args: cobra.MinimumNArgs(1),
-	RunE: func(cmd *cobra.Command, args []string) error {
-		idx, err := loadIndex()
-		if err != nil { return err }
-
-		paths := make(map[string]index.BlobID)
+	Long:  `Add file to index`,
+	Args:  cobra.MinimumNArgs(1),
+	RunE: runIndex(func(_ *cobra.Command, args []string, idx *index.Index) error {
+		// Add each path to the index:
+		paths := make(map[string]index.BlobID, len(args))
 		for _, path := range args {
 			blobID, err := idx.Add(path)
 			if err != nil {
@@ -31,7 +30,7 @@ var addCmd = &cobra.Command{
 		enc := json.NewEncoder(os.Stdout)
 		enc.SetIndent("", "  ")
 		return enc.Encode(paths)
-	},
+	}),
 }
 
 func init() {
