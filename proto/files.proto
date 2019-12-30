@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package archivist;
+option go_package = "github.com/thepwagner/archivist";
+
+// Blob is an archived collection of bytes.
+message Blob {
+  bytes blob_id = 1;
+  uint64 size = 2;
+
+  message Integrity {
+      bytes sha512 = 1;
+      //bytes blake2s = 2;
+  }
+  Integrity integrity = 3;
+}
+
+// BlobIDs are a collection of Blobs by reference.
+message BlobIDs {
+  repeated bytes blob_ids = 1;
+}
+
+// Filenames is an index of filenames to Blobs.
+message Filenames {
+  map<string,BlobIDs> index = 1;
+}
