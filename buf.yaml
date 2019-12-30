@@ -1,10 +1,11 @@
 build:
   roots:
-    - proto
+    - .
 lint:
   use:
-    - BASIC
+    - DEFAULT
     - FILE_LOWER_SNAKE_CASE
+    - COMMENT_MESSAGE
   except:
     - ENUM_NO_ALLOW_ALIAS
     - PACKAGE_AFFINITY

@@ -1,11 +1,12 @@
 syntax = "proto3";
 
-package archivist;
+package archivist.v1;
 option go_package = "github.com/thepwagner/archivist";
 
 import "proto/files.proto";
 
+// Index stores data for later retrieval.
 message Index {
-    repeated archivist.Blob blobs = 1;
-    map<string, archivist.IDs> blob_filenames = 2;
+    repeated archivist.v1.Blob blobs = 1;
+    map<string, archivist.v1.IDs> blob_filenames = 2;
 }

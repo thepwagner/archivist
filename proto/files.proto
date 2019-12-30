@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package archivist;
+package archivist.v1;
 option go_package = "github.com/thepwagner/archivist";
 
 // Blob is an archived collection of bytes.
@@ -8,6 +8,7 @@ message Blob {
     string id = 1;
     uint64 size = 2;
 
+    // Integrity are hashes of byte content.
     message Integrity {
         bytes sha512 = 1;
         //bytes blake2s = 2;
