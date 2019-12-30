@@ -2,6 +2,8 @@ package cmd
 
 import (
   "fmt"
+  "github.com/sirupsen/logrus"
+  "github.com/thepwagner/archivist/index"
   "os"
   "github.com/spf13/cobra"
 
@@ -60,5 +62,11 @@ func initConfig() {
   if err := viper.ReadInConfig(); err == nil {
     fmt.Println("Using config file:", viper.ConfigFileUsed())
   }
+
+  logrus.SetLevel(logrus.DebugLevel)
+  logrus.StandardLogger().Formatter.(*logrus.TextFormatter).ForceColors = true
 }
 
+func loadIndex() *index.Index {
+  return index.NewIndex()
+}
