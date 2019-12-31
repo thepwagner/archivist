@@ -11,15 +11,19 @@ import (
 	archivist "github.com/thepwagner/archivist/proto"
 )
 
+
+
 type BlobID string
 
 type Index struct {
+	drives    map[DriveID]*archivist.Drive
 	blobs     map[BlobID]*archivist.Blob
 	filenames map[string][]BlobID
 }
 
 func NewIndex() *Index {
 	return &Index{
+		drives:    make(map[DriveID]*archivist.Drive),
 		blobs:     make(map[BlobID]*archivist.Blob),
 		filenames: make(map[string][]BlobID),
 	}

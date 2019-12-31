@@ -3,6 +3,17 @@ syntax = "proto3";
 package archivist.v1;
 option go_package = "github.com/thepwagner/archivist";
 
+// Drive is a physical storage device.
+message Drive {
+    string id = 1;
+    string model_number = 2;
+    string serial_number = 3;
+    uint64 capacity = 4;
+    uint64 power_cycle_count = 5;
+    uint64 power_on_hours = 6;
+    // TODO: acquired, time online, last seen?
+}
+
 // Blob is an archived collection of bytes.
 message Blob {
     string id = 1;
@@ -19,4 +30,11 @@ message Blob {
 // IDs are a collection of IDs by reference.
 message IDs {
     repeated string ids = 1;
+}
+
+
+// FileSystem is one or more drives.
+message FileSystem {
+   repeated string drive_ids = 1;
+   uint64 capacity = 2;
 }

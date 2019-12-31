@@ -12,12 +12,12 @@ import (
 // SaveIndex persists index to disk.
 func SaveIndex(idx *Index, path string) error {
 	data := toProtoIndex(idx)
-	return writeProtoIndex(data, path)
+	return WriteProtoIndex(data, path)
 }
 
 // LoadIndex reads index from disk.
 func LoadIndex(path string) (*Index, error) {
-	data, err := readProtoIndex(path)
+	data, err := ReadProtoIndex(path)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,7 @@ func toProtoIndex(idx *Index) *archivist.Index {
 	return &data
 }
 
-func writeProtoIndex(data *archivist.Index, filename string) error {
+func WriteProtoIndex(data *archivist.Index, filename string) error {
 	b, err := proto.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("marshaling index: %w", err)
@@ -53,7 +53,7 @@ func writeProtoIndex(data *archivist.Index, filename string) error {
 	return nil
 }
 
-func readProtoIndex(path string) (*archivist.Index, error) {
+func ReadProtoIndex(path string) (*archivist.Index, error) {
 	b, err := ioutil.ReadFile(path)
 	if err != nil {
 		if os.IsNotExist(err) {
