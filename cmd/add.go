@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/thepwagner/archivist/index"
 	archivist "github.com/thepwagner/archivist/proto"
 
 	"github.com/spf13/cobra"
@@ -16,9 +15,9 @@ var addCmd = &cobra.Command{
 	Short: "Add a file to the index",
 	Long:  `Add file to index`,
 	Args:  cobra.MinimumNArgs(1),
-	RunE: runIndex(func(idx *archivist.Index, args []string, ) error {
+	RunE: runIndex(func(idx *archivist.Index, args []string) error {
 		// Add each path to the index:
-		paths := make(map[string]index.BlobID, len(args))
+		paths := make(map[string]int64, len(args))
 		//for _, path := range args {
 		//	blobID, err := idx.Add(path)
 		//	if err != nil {

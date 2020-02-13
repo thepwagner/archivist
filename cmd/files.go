@@ -8,18 +8,17 @@ import (
 	archivist "github.com/thepwagner/archivist/proto"
 )
 
-var drivesCmd = &cobra.Command{
-	Use:   "drives",
-	Short: "List drives",
-	RunE: runIndex(func(idx *archivist.Index, args []string) error {
+var filesCmd = &cobra.Command{
+	Use:   "files",
+	Short: "List files",
+	RunE: runIndex(func(idx *archivist.Index, _ []string) error {
 		enc := json.NewEncoder(os.Stdout)
 		enc.SetIndent("", "  ")
 		return enc.Encode(map[string]interface{}{
-			"drives": idx.Drives,
 		})
 	}),
 }
 
 func init() {
-	rootCmd.AddCommand(drivesCmd)
+	rootCmd.AddCommand(filesCmd)
 }
