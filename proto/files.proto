@@ -6,7 +6,7 @@ option go_package = "github.com/thepwagner/archivist";
 // Integrity are hashes of byte content.
 message Integrity {
     bytes sha512 = 1;
-    //bytes blake2s = 2;
+    bytes blake2b512 = 2;
 }
 
 // Blob is an archived collection of bytes.
