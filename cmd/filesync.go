@@ -50,6 +50,9 @@ func SyncFilesystem(idx *archivist.Index, root string) error {
 			}
 		}
 
+		// File does not exist, add to blob index:
+		// FIXME: if a file is "touched", we passed through the above (mtime mismatch) and will calculate integrity
+		// AddBlob() will match only on hash, so it won't update mtime of the blob - we'll re-hash every time.
 		blob, err := AddBlob(idx, path, info)
 		if err != nil {
 			return err
@@ -75,7 +78,6 @@ func SyncFilesystem(idx *archivist.Index, root string) error {
 }
 
 func AddBlob(idx *archivist.Index, path string, info os.FileInfo) (*archivist.Blob, error) {
-	// XXX: too expensive
 	integrity, err := archivist.NewFileIntegrity(path)
 	if err != nil {
 		return nil, err

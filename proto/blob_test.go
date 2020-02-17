@@ -43,6 +43,19 @@ func TestNewBlob(t *testing.T) {
 	assertTestMessageIntegrity(t, b.GetIntegrity())
 }
 
+func TestNewBlob_NotFound(t *testing.T) {
+	_, err := archivist.NewBlob("/must-not-exist")
+	assert.Error(t, err)
+}
+
+func TestNewBlob_NotFile(t *testing.T) {
+	tmp, err := ioutil.TempDir("", "new-blob-not-file-")
+	require.NoError(t, err)
+	defer os.RemoveAll(tmp)
+	_, err = archivist.NewBlob(tmp)
+	assert.Error(t, err)
+}
+
 func testMessageFile(t *testing.T) *os.File {
 	f, err := ioutil.TempFile("", "test-*")
 	require.NoError(t, err)

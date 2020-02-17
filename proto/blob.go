@@ -14,20 +14,7 @@ import (
 	"golang.org/x/crypto/blake2b"
 )
 
-type BlobIndex struct {
-	ByID map[string]*Blob
-}
-
-func NewBlobIndex(blobs []*Blob) *BlobIndex {
-	bi := &BlobIndex{
-		ByID: make(map[string]*Blob, len(blobs)),
-	}
-	for _, b := range blobs {
-		bi.ByID[b.Id] = b
-	}
-	return bi
-}
-
+// NewBlob creates a Blob for a file path.
 func NewBlob(path string) (*Blob, error) {
 	log := logrus.WithField("path", path)
 	log.Debug("Reading file as blob")
@@ -54,16 +41,17 @@ func NewBlob(path string) (*Blob, error) {
 	if err != nil {
 		return nil, err
 	}
-	blob := &Blob{
-		Id:        uuid.NewV4().String(),
+
+	blobID := uuid.NewV4().String()
+	return &Blob{
+		Id:        blobID,
 		Size:      size,
 		ModTime:   modTime,
 		Integrity: integrity,
-	}
-
-	return blob, nil
+	}, nil
 }
 
+// NewFileIntegrity calculates hashes on a file path.
 func NewFileIntegrity(path string) (*Integrity, error) {
 	f, err := os.Open(path)
 	if err != nil {
@@ -73,6 +61,7 @@ func NewFileIntegrity(path string) (*Integrity, error) {
 	return NewIntegrity(f)
 }
 
+// NewIntegrity consumes a Reader to hash data.
 func NewIntegrity(r io.Reader) (*Integrity, error) {
 	shaHasher := sha512.New()
 	blakeHasher, err := blake2b.New512(nil)
