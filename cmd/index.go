@@ -9,18 +9,18 @@ import (
 func runIndex(run func(idx *archivist.Index, args []string) error) func(cmd *cobra.Command, args []string) error {
 	return func(_ *cobra.Command, args []string) error {
 		indexFn := viper.GetString("index")
-		idx, err := archivist.ReadProtoIndex(indexFn)
-		if err != nil {
+		var idx archivist.Index
+		if err := archivist.ReadProtoIndex(indexFn, &idx); err != nil {
 			return err
 		}
 
-		if err := run(idx, args); err != nil {
+		if err := run(&idx, args); err != nil {
 			return err
 		}
 
 		if viper.GetBool("readonly") {
 			return nil
 		}
-		return archivist.WriteProtoIndex(idx, indexFn)
+		return archivist.WriteProtoIndex(&idx, indexFn)
 	}
 }

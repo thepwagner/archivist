@@ -8,4 +8,5 @@ import "proto/files.proto";
 // Index stores data for later retrieval.
 message Index {
     repeated archivist.v1.Blob blobs = 1;
+    map<string, archivist.v1.Filesystem> filesystems = 2;
 }

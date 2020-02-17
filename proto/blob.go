@@ -8,6 +8,7 @@ import (
 	"io"
 	"os"
 
+	uuid "github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/blake2b"
 )
@@ -35,6 +36,7 @@ func NewBlob(path string) (*Blob, error) {
 		"blake2b": base64.StdEncoding.EncodeToString(integrity.Blake2B512),
 	}).Debug("Read file blob")
 	blob := &Blob{
+		Id:        uuid.NewV4().String(),
 		Size:      size,
 		Integrity: integrity,
 	}

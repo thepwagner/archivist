@@ -15,3 +15,7 @@ message Blob {
     uint64 size = 2;
     Integrity integrity = 3;
 }
+
+message Filesystem {
+    map<string, string> paths = 1;
+}

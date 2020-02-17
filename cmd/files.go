@@ -14,8 +14,7 @@ var filesCmd = &cobra.Command{
 	RunE: runIndex(func(idx *archivist.Index, _ []string) error {
 		enc := json.NewEncoder(os.Stdout)
 		enc.SetIndent("", "  ")
-		return enc.Encode(map[string]interface{}{
-		})
+		return enc.Encode(idx)
 	}),
 }
 

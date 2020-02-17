@@ -23,7 +23,8 @@ func TestReadProtoIndex(t *testing.T) {
 	tmp := writeTempIndex(t)
 	defer os.Remove(tmp.Name())
 
-	i, err := archivist.ReadProtoIndex(tmp.Name())
+	var i archivist.Index
+	err := archivist.ReadProtoIndex(tmp.Name(), &i)
 	require.NoError(t, err)
 	assert.Equal(t, "1", i.Blobs[0].GetId())
 }
