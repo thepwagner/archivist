@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
@@ -60,6 +61,44 @@ func TestSyncFiles_Add(t *testing.T) {
 	blobs := archivist.NewBlobIndex(idx.GetBlobs())
 
 	helloBlob := blobs.ByID[idx.Filesystems[tmp].Paths["world"].BlobId]
+	assert.Equal(t, uint64(len(helloWorld)), helloBlob.Size)
+}
+
+func TestSyncFiles_Touch(t *testing.T) {
+	tmp := tmpTree(t)
+	defer os.RemoveAll(tmp)
+
+	idx := &archivist.Index{}
+	err := cmd.SyncFilesystem(idx, tmp)
+	require.NoError(t, err)
+
+	// Snapshot:
+	beforeFS := idx.GetFilesystem(tmp)
+	beforeHello := beforeFS.Paths["hello"]
+	helloBlobID := beforeHello.BlobId
+	helloMtime := beforeHello.ModTime.Nanos
+	beforeEmpty := beforeFS.Paths["empty"]
+	emptyBlobID := beforeEmpty.BlobId
+	emptyMtime := beforeEmpty.ModTime.Nanos
+
+	// Touch and resync:
+	now := time.Now()
+	err = os.Chtimes(filepath.Join(tmp, "hello"), now, now)
+	require.NoError(t, err)
+	err = cmd.SyncFilesystem(idx, tmp)
+	require.NoError(t, err)
+
+	afterFS := idx.GetFilesystem(tmp)
+	afterHello := afterFS.Paths["hello"]
+	assert.Equal(t, helloBlobID, afterHello.BlobId)
+	assert.NotEqual(t, helloMtime, afterHello.ModTime.Nanos)
+	afterEmpty := afterFS.Paths["empty"]
+	assert.Equal(t, emptyBlobID, afterEmpty.BlobId)
+	assert.Equal(t, emptyMtime, afterEmpty.ModTime.Nanos)
+
+	assert.Len(t, idx.GetBlobs(), 2)
+	blobs := archivist.NewBlobIndex(idx.GetBlobs())
+	helloBlob := blobs.ByID[afterHello.BlobId]
 	assert.Equal(t, uint64(len(helloWorld)), helloBlob.Size)
 }
 
