@@ -8,7 +8,6 @@ import (
 	"io"
 	"os"
 
-	"github.com/golang/protobuf/ptypes"
 	uuid "github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/blake2b"
@@ -37,16 +36,11 @@ func NewBlob(path string) (*Blob, error) {
 		"sha512":  base64.StdEncoding.EncodeToString(integrity.Sha512),
 		"blake2b": base64.StdEncoding.EncodeToString(integrity.Blake2B512),
 	}).Debug("Read file blob")
-	modTime, err := ptypes.TimestampProto(stat.ModTime())
-	if err != nil {
-		return nil, err
-	}
 
 	blobID := uuid.NewV4().String()
 	return &Blob{
 		Id:        blobID,
 		Size:      size,
-		ModTime:   modTime,
 		Integrity: integrity,
 	}, nil
 }

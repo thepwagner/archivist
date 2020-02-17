@@ -15,10 +15,14 @@ message Integrity {
 message Blob {
     string id = 1;
     uint64 size = 2;
-    google.protobuf.Timestamp mod_time = 4;
     Integrity integrity = 3;
 }
 
+message File {
+    string blob_id = 1;
+    google.protobuf.Timestamp mod_time = 2;
+}
+
 message Filesystem {
-    map<string, string> paths = 1;
+    map<string, File> paths = 1;
 }

@@ -25,7 +25,7 @@ func SyncFilesystem(idx *archivist.Index, root string) error {
 	// Walk tree and index files
 	fs := idx.GetFilesystem(root)
 	blobs := archivist.NewBlobIndex(idx.GetBlobs())
-	newPaths := make(map[string]string, len(fs.Paths))
+	newPaths := make(map[string]*archivist.File, len(fs.Paths))
 	walkFunc := func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			return nil
@@ -37,13 +37,14 @@ func SyncFilesystem(idx *archivist.Index, root string) error {
 		log := logrus.WithField("path", path)
 
 		// If file exists with the same size+mtime, skip integrity calculation:
-		if oldBlobID, ok := fs.Paths[pathRel]; ok {
-			if oldBlob, ok := blobs.ByID[oldBlobID]; ok {
-				if oldBlob.Size == uint64(info.Size()) {
-					oldBlobModTime, err := ptypes.Timestamp(oldBlob.GetModTime())
-					if err == nil && oldBlobModTime == info.ModTime().UTC() {
+		if oldFile, ok := fs.Paths[pathRel]; ok {
+			oldFileModTime, err := ptypes.Timestamp(oldFile.GetModTime())
+			if err == nil && oldFileModTime == info.ModTime().UTC() {
+				oldBlobID := oldFile.GetBlobId()
+				if oldBlob, ok := blobs.ByID[oldBlobID]; ok {
+					if oldBlob.Size == uint64(info.Size()) {
 						log.WithField("blob_id", oldBlobID).Debug("Path matched existing blob")
-						newPaths[pathRel] = oldBlobID
+						newPaths[pathRel] = oldFile
 						return nil
 					}
 				}
@@ -51,14 +52,20 @@ func SyncFilesystem(idx *archivist.Index, root string) error {
 		}
 
 		// File does not exist, add to blob index:
-		// FIXME: if a file is "touched", we passed through the above (mtime mismatch) and will calculate integrity
-		// AddBlob() will match only on hash, so it won't update mtime of the blob - we'll re-hash every time.
 		blob, err := AddBlob(idx, path, info)
 		if err != nil {
 			return err
 		}
 		log.WithField("blob_id", blob.Id).Debug("Indexed new path")
-		newPaths[pathRel] = blob.GetId()
+		modTime, err := ptypes.TimestampProto(info.ModTime())
+		if err != nil {
+			return err
+		}
+
+		newPaths[pathRel] = &archivist.File{
+			BlobId:  blob.Id,
+			ModTime: modTime,
+		}
 		return nil
 	}
 	if err := filepath.Walk(rootDir, walkFunc); err != nil {
@@ -98,13 +105,8 @@ func AddBlob(idx *archivist.Index, path string, info os.FileInfo) (*archivist.Bl
 		return b, nil
 	}
 
-	modTime, err := ptypes.TimestampProto(info.ModTime())
-	if err != nil {
-		return nil, err
-	}
 	blob := &archivist.Blob{
 		Id:        uuid.NewV4().String(),
-		ModTime:   modTime,
 		Size:      uint64(info.Size()),
 		Integrity: integrity,
 	}

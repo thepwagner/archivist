@@ -35,10 +35,10 @@ func TestSyncFiles(t *testing.T) {
 		assert.Len(t, fs.Paths, 2)
 
 		assert.Contains(t, fs.Paths, "empty")
-		emptyBlob := blobs.ByID[fs.Paths["empty"]]
+		emptyBlob := blobs.ByID[fs.Paths["empty"].BlobId]
 		assert.Equal(t, uint64(0), emptyBlob.Size)
 
-		helloBlob := blobs.ByID[fs.Paths["hello"]]
+		helloBlob := blobs.ByID[fs.Paths["hello"].BlobId]
 		assert.Equal(t, uint64(len(helloWorld)), helloBlob.Size)
 	}
 }
@@ -59,7 +59,7 @@ func TestSyncFiles_Add(t *testing.T) {
 	assert.Len(t, idx.GetBlobs(), 2, "duplicate file blob")
 	blobs := archivist.NewBlobIndex(idx.GetBlobs())
 
-	helloBlob := blobs.ByID[idx.Filesystems[tmp].Paths["world"]]
+	helloBlob := blobs.ByID[idx.Filesystems[tmp].Paths["world"].BlobId]
 	assert.Equal(t, uint64(len(helloWorld)), helloBlob.Size)
 }
 
