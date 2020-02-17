@@ -24,11 +24,11 @@ func TestSyncFiles(t *testing.T) {
 	defer os.RemoveAll(tmp)
 
 	idx := &archivist.Index{}
-	err := cmd.SyncFiles(idx, tmp)
+	err := cmd.SyncFilesystem(idx, tmp)
 	require.NoError(t, err)
 
 	assert.Len(t, idx.GetBlobs(), 2)
-	blobs := NewBlobIndex(idx.GetBlobs())
+	blobs := archivist.NewBlobIndex(idx.GetBlobs())
 	assert.Len(t, idx.GetFilesystems(), 1)
 	if assert.Contains(t, idx.GetFilesystems(), tmp) {
 		fs := idx.Filesystems[tmp]
@@ -48,16 +48,16 @@ func TestSyncFiles_Add(t *testing.T) {
 	defer os.RemoveAll(tmp)
 
 	idx := &archivist.Index{}
-	err := cmd.SyncFiles(idx, tmp)
+	err := cmd.SyncFilesystem(idx, tmp)
 	require.NoError(t, err)
 
 	err = ioutil.WriteFile(filepath.Join(tmp, "world"), []byte("hello world"), 0600)
 	require.NoError(t, err)
 
-	err = cmd.SyncFiles(idx, tmp)
+	err = cmd.SyncFilesystem(idx, tmp)
 	require.NoError(t, err)
 	assert.Len(t, idx.GetBlobs(), 2, "duplicate file blob")
-	blobs := NewBlobIndex(idx.GetBlobs())
+	blobs := archivist.NewBlobIndex(idx.GetBlobs())
 
 	helloBlob := blobs.ByID[idx.Filesystems[tmp].Paths["world"]]
 	assert.Equal(t, uint64(len(helloWorld)), helloBlob.Size)
@@ -68,13 +68,13 @@ func TestSyncFiles_Remove(t *testing.T) {
 	defer os.RemoveAll(tmp)
 
 	idx := &archivist.Index{}
-	err := cmd.SyncFiles(idx, tmp)
+	err := cmd.SyncFilesystem(idx, tmp)
 	require.NoError(t, err)
 
 	err = os.Remove(filepath.Join(tmp, "hello"))
 	require.NoError(t, err)
 
-	err = cmd.SyncFiles(idx, tmp)
+	err = cmd.SyncFilesystem(idx, tmp)
 	require.NoError(t, err)
 	assert.Len(t, idx.GetBlobs(), 2, "removed blob purged")
 	assert.NotContains(t, idx.Filesystems[tmp].Paths, "hello")
@@ -90,18 +90,4 @@ func tmpTree(t *testing.T) string {
 	err = ioutil.WriteFile(filepath.Join(tmp, "hello"), helloWorld, 0600)
 	require.NoError(t, err)
 	return tmp
-}
-
-type BlobIndex struct {
-	ByID map[string]*archivist.Blob
-}
-
-func NewBlobIndex(blobs []*archivist.Blob) *BlobIndex {
-	bi := &BlobIndex{
-		ByID: make(map[string]*archivist.Blob, len(blobs)),
-	}
-	for _, b := range blobs {
-		bi.ByID[b.Id] = b
-	}
-	return bi
 }

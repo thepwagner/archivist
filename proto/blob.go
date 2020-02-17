@@ -8,10 +8,25 @@ import (
 	"io"
 	"os"
 
+	"github.com/golang/protobuf/ptypes"
 	uuid "github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/blake2b"
 )
+
+type BlobIndex struct {
+	ByID map[string]*Blob
+}
+
+func NewBlobIndex(blobs []*Blob) *BlobIndex {
+	bi := &BlobIndex{
+		ByID: make(map[string]*Blob, len(blobs)),
+	}
+	for _, b := range blobs {
+		bi.ByID[b.Id] = b
+	}
+	return bi
+}
 
 func NewBlob(path string) (*Blob, error) {
 	log := logrus.WithField("path", path)
@@ -35,9 +50,14 @@ func NewBlob(path string) (*Blob, error) {
 		"sha512":  base64.StdEncoding.EncodeToString(integrity.Sha512),
 		"blake2b": base64.StdEncoding.EncodeToString(integrity.Blake2B512),
 	}).Debug("Read file blob")
+	modTime, err := ptypes.TimestampProto(stat.ModTime())
+	if err != nil {
+		return nil, err
+	}
 	blob := &Blob{
 		Id:        uuid.NewV4().String(),
 		Size:      size,
+		ModTime:   modTime,
 		Integrity: integrity,
 	}
 

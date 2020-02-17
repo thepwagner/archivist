@@ -3,6 +3,8 @@ syntax = "proto3";
 package archivist.v1;
 option go_package = "github.com/thepwagner/archivist";
 
+import "google/protobuf/timestamp.proto";
+
 // Integrity are hashes of byte content.
 message Integrity {
     bytes sha512 = 1;
@@ -13,6 +15,7 @@ message Integrity {
 message Blob {
     string id = 1;
     uint64 size = 2;
+    google.protobuf.Timestamp mod_time = 4;
     Integrity integrity = 3;
 }
 
