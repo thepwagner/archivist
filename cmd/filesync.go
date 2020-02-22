@@ -94,7 +94,7 @@ func SyncFilesystem(idx *archivist.Index, root string) error {
 
 	// Log paths no longer in this filesystem:
 	if logrus.IsLevelEnabled(logrus.DebugLevel) {
-		for p := range fs.GetPaths() {
+		for p := range oldPaths {
 			if _, ok := newPaths[p]; !ok {
 				logrus.WithField("path", p).Debug("File no longer in index")
 			}
