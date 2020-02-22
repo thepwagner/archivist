@@ -24,9 +24,18 @@ func SyncFilesystem(idx *archivist.Index, root string) error {
 
 	// Walk tree and index files
 	fs := idx.GetFilesystem(root)
+	logrus.WithField("existing_paths", len(fs.Paths)).Debug("Loaded filesystem")
 	blobs := archivist.NewBlobIndex(idx.GetBlobs())
 	newPaths := make(map[string]*archivist.File, len(fs.Paths))
+
+	// FIXME: don't assign here (but it makes early syncs incremental)
+	oldPaths := fs.Paths
+	fs.Paths = newPaths
+
 	walkFunc := func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
 		if info.IsDir() || isSymlink(info) {
 			return nil
 		}
@@ -34,10 +43,11 @@ func SyncFilesystem(idx *archivist.Index, root string) error {
 		if err != nil {
 			return fmt.Errorf("calculating rel path: %w", err)
 		}
-		log := logrus.WithField("path", path)
+		log := logrus.WithField("path", pathRel)
 
 		// If file exists with the same size+mtime, skip integrity calculation:
-		if oldFile, ok := fs.Paths[pathRel]; ok {
+		if oldFile, ok := oldPaths[pathRel]; ok {
+			// Compare mtime first:
 			oldFileModTime, err := ptypes.Timestamp(oldFile.GetModTime())
 			if err == nil && oldFileModTime == info.ModTime().UTC() {
 				oldBlobID := oldFile.GetBlobId()
@@ -46,8 +56,18 @@ func SyncFilesystem(idx *archivist.Index, root string) error {
 						log.WithField("blob_id", oldBlobID).Debug("Path matched existing blob")
 						newPaths[pathRel] = oldFile
 						return nil
+					} else {
+						log.WithFields(logrus.Fields{
+							"existing_size": oldBlob.Size,
+							"size":          uint64(info.Size()),
+						}).Debug("Path exists but has different size")
 					}
 				}
+			} else {
+				log.WithFields(logrus.Fields{
+					"existing_mtime": oldFileModTime,
+					"mtime":          info.ModTime().UTC(),
+				}).Debug("Path exists but has different mtime")
 			}
 		}
 

@@ -1,6 +1,10 @@
 package cmd
 
 import (
+	"os"
+	"os/signal"
+	"syscall"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	archivist "github.com/thepwagner/archivist/proto"
@@ -13,6 +17,16 @@ func runIndex(run func(idx *archivist.Index, args []string) error) func(cmd *cob
 		if err := archivist.ReadProtoIndex(indexFn, &idx); err != nil {
 			return err
 		}
+
+		sigs := make(chan os.Signal, 1)
+		signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+		go func() {
+			<-sigs
+			if !viper.GetBool("readonly") {
+				archivist.WriteProtoIndex(&idx, indexFn)
+			}
+			os.Exit(1)
+		}()
 
 		if err := run(&idx, args); err != nil {
 			return err
