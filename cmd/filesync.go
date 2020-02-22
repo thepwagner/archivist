@@ -19,7 +19,7 @@ func SyncFilesystem(idx *archivist.Index, root string) error {
 	// Verify provided path is a directory:
 	rootDir, err := ensureDir(root)
 	if err != nil {
-		return err
+		return fmt.Errorf("ensuring directory: %w", err)
 	}
 
 	// Walk tree and index files
@@ -27,12 +27,12 @@ func SyncFilesystem(idx *archivist.Index, root string) error {
 	blobs := archivist.NewBlobIndex(idx.GetBlobs())
 	newPaths := make(map[string]*archivist.File, len(fs.Paths))
 	walkFunc := func(path string, info os.FileInfo, err error) error {
-		if info.IsDir() {
+		if info.IsDir() || isSymlink(info) {
 			return nil
 		}
 		pathRel, err := filepath.Rel(rootDir, path)
 		if err != nil {
-			return err
+			return fmt.Errorf("calculating rel path: %w", err)
 		}
 		log := logrus.WithField("path", path)
 
@@ -54,7 +54,7 @@ func SyncFilesystem(idx *archivist.Index, root string) error {
 		// File does not exist, add to blob index:
 		blob, err := AddBlob(idx, path, info)
 		if err != nil {
-			return err
+			return fmt.Errorf("adding blob %q: %w", path, err)
 		}
 		log.WithField("blob_id", blob.Id).Debug("Indexed new path")
 		modTime, err := ptypes.TimestampProto(info.ModTime())
@@ -82,6 +82,10 @@ func SyncFilesystem(idx *archivist.Index, root string) error {
 	}
 	fs.Paths = newPaths
 	return nil
+}
+
+func isSymlink(info os.FileInfo) bool {
+	return info.Mode()&os.ModeSymlink == os.ModeSymlink
 }
 
 func AddBlob(idx *archivist.Index, path string, info os.FileInfo) (*archivist.Blob, error) {
