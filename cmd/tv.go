@@ -13,14 +13,13 @@ import (
 var tvCmd = &cobra.Command{
 	Use:   "tv [query]",
 	Short: "Search TV shows",
-	Args:  cobra.MinimumNArgs(1),
 	RunE: runIndex(func(idx *archivist.Index, args []string) error {
-		re, err := regexp.Compile(fmt.Sprintf("(?i)%s", args[0]))
+		re, err := buildQueryRE(args)
 		if err != nil {
 			return fmt.Errorf("compiling regexp: %w", err)
 		}
-		results := archivist.FindTV(idx, re)
 
+		results := archivist.FindTV(idx, re)
 		out := os.Stdout
 		_, _ = fmt.Fprint(out, "TV Results:\n")
 		if len(results) == 0 {
@@ -43,6 +42,13 @@ var tvCmd = &cobra.Command{
 
 		return nil
 	}),
+}
+
+func buildQueryRE(args []string) (*regexp.Regexp, error) {
+	if len(args) > 0 {
+		return regexp.Compile(fmt.Sprintf("(?i)%s", args[0]))
+	}
+	return regexp.MustCompile("."), nil
 }
 
 func ByteCountSI(b uint64) string {
