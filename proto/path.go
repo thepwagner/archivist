@@ -2,31 +2,48 @@ package archivist
 
 import (
 	"regexp"
+	"sort"
 	"strings"
 )
 
-var tvRe = regexp.MustCompile("tv/([A-Za-z0-9 ()]+)/")
+var (
+	tvRe    = regexp.MustCompile("tv/([A-Za-z0-9 ()]+)/")
+	movieRe = regexp.MustCompile("movies/([A-Za-z0-9 ()]+)/")
+)
 
 // FindTV searches for a TV show in the archive.
 // Returns a map of show name to filesystems storing _some_ part of it.
 func FindTV(idx *Index, re *regexp.Regexp) map[string][]string {
-	res := map[string][]string{}
+	return findMedia(idx, tvRe, re)
+}
 
+// FindMovies searches for a movies in the archive.
+// Returns a map of Movie name to filesystems storing _some_ part of it.
+func FindMovies(idx *Index, re *regexp.Regexp) map[string][]string {
+	return findMedia(idx, movieRe, re)
+}
+
+func findMedia(idx *Index, mediaRe *regexp.Regexp, pathRe *regexp.Regexp) map[string][]string {
+	res := map[string][]string{}
 	for fsName, fs := range idx.GetFilesystems() {
 		// We operate on files, so we'll see the same shows (in directory path) 3x the number of episodes.
 		done := map[string]struct{}{}
 		for p := range fs.GetPaths() {
-			if m := tvRe.FindStringSubmatch(p); len(m) > 0 {
+			if m := mediaRe.FindStringSubmatch(p); len(m) > 0 {
 				showName := m[1]
 				if _, ok := done[showName]; ok {
 					continue
 				}
-				if re.MatchString(showName) {
+				if pathRe.MatchString(showName) {
 					res[showName] = append(res[showName], fsName)
 				}
 				done[showName] = struct{}{}
 			}
 		}
+	}
+
+	for _, fses := range res {
+		sort.Strings(fses)
 	}
 
 	return res
