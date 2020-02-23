@@ -11,7 +11,7 @@ import (
 var filesCmd = &cobra.Command{
 	Use:   "files",
 	Short: "List files",
-	RunE: runIndex(func(idx *archivist.Index, _ []string) error {
+	RunE: runIndexRO(func(idx *archivist.Index, _ []string) error {
 		enc := json.NewEncoder(os.Stdout)
 		enc.SetIndent("", "  ")
 		return enc.Encode(idx)

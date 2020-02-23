@@ -13,7 +13,7 @@ import (
 var tvCmd = &cobra.Command{
 	Use:   "tv [query]",
 	Short: "Search TV shows",
-	RunE: runIndex(func(idx *archivist.Index, args []string) error {
+	RunE: runIndexRO(func(idx *archivist.Index, args []string) error {
 		re, err := buildQueryRE(args)
 		if err != nil {
 			return fmt.Errorf("compiling regexp: %w", err)

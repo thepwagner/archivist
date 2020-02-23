@@ -14,7 +14,7 @@ import (
 var dupesCmd = &cobra.Command{
 	Use:   "dupes",
 	Short: "Find duplicate data",
-	RunE: runIndex(func(idx *archivist.Index, args []string) error {
+	RunE: runIndexRO(func(idx *archivist.Index, args []string) error {
 		out := os.Stdout
 		reportTvDupes(idx, out)
 		return nil

@@ -43,3 +43,22 @@ func runIndex(run func(idx *archivist.Index, args []string) error) func(cmd *cob
 		return archivist.WriteProtoIndex(&idx, indexFn)
 	}
 }
+
+func runIndexRO(run func(idx *archivist.Index, args []string) error) func(cmd *cobra.Command, args []string) error {
+	return func(_ *cobra.Command, args []string) error {
+		indexFn := viper.GetString("index")
+
+		var idx archivist.Index
+		if err := archivist.ReadProtoIndex(indexFn, &idx); err != nil {
+			return err
+		}
+
+		start := time.Now()
+		if err := run(&idx, args); err != nil {
+			return err
+		}
+		logrus.WithField("dur", time.Since(start).Truncate(time.Millisecond).Milliseconds()).Debug("Ran command")
+
+		return nil
+	}
+}
