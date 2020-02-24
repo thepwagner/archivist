@@ -35,8 +35,8 @@ func reportTvDupes(idx *archivist.Index, out io.Writer) {
 		for _, show := range tvDupes {
 			_, _ = fmt.Fprintf(out, "%s\n", show)
 			for _, fs := range tvShows[show] {
-				fsSummary := archivist.Summarize(idx, []string{fs}, fmt.Sprintf("video/tv/%s", show))
-				_, _ = fmt.Fprintf(out, "  %s - %d files, %s\n", fs, fsSummary.FileCount, ByteCountSI(fsSummary.FileSizeSum))
+				fsSummary := archivist.Summarize(idx, fs, fmt.Sprintf("video/tv/%s", show))
+				_, _ = fmt.Fprintf(out, "  %s - %s\n", fs, fsSummary)
 			}
 		}
 	}

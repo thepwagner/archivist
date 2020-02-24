@@ -34,8 +34,8 @@ var tvCmd = &cobra.Command{
 			for _, show := range shows {
 				_, _ = fmt.Fprintf(out, "%s\n", show)
 				for _, fs := range results[show] {
-					fsSummary := archivist.Summarize(idx, []string{fs}, fmt.Sprintf("video/tv/%s", show))
-					_, _ = fmt.Fprintf(out, "  %s - %d files, %s\n", fs, fsSummary.FileCount, ByteCountSI(fsSummary.FileSizeSum))
+					fsSummary := archivist.Summarize(idx, fs, fmt.Sprintf("video/tv/%s", show))
+					_, _ = fmt.Fprintf(out, "  %s - %s\n", fs, fsSummary)
 				}
 			}
 		}
@@ -49,20 +49,6 @@ func buildQueryRE(args []string) (*regexp.Regexp, error) {
 		return regexp.Compile(fmt.Sprintf("(?i)%s", args[0]))
 	}
 	return regexp.MustCompile("."), nil
-}
-
-func ByteCountSI(b uint64) string {
-	const unit = 1000
-	if b < unit {
-		return fmt.Sprintf("%d B", b)
-	}
-	div, exp := int64(unit), 0
-	for n := b / unit; n >= unit; n /= unit {
-		div *= unit
-		exp++
-	}
-	return fmt.Sprintf("%.1f %cB",
-		float64(b)/float64(div), "kMGTPE"[exp])
 }
 
 func init() {

@@ -33,8 +33,8 @@ var movieCmd = &cobra.Command{
 			for _, movie := range movies {
 				_, _ = fmt.Fprintf(out, "%s\n", movie)
 				for _, fs := range results[movie] {
-					fsSummary := archivist.Summarize(idx, []string{fs}, fmt.Sprintf("video/movies/%s", movie))
-					_, _ = fmt.Fprintf(out, "  %s - %d files, %s\n", fs, fsSummary.FileCount, ByteCountSI(fsSummary.FileSizeSum))
+					fsSummary := archivist.Summarize(idx, fs, fmt.Sprintf("video/movies/%s", movie))
+					_, _ = fmt.Fprintf(out, "  %s - %s\n", fs, fsSummary)
 				}
 			}
 		}

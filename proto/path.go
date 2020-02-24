@@ -1,6 +1,7 @@
 package archivist
 
 import (
+	"fmt"
 	"regexp"
 	"sort"
 	"strings"
@@ -54,14 +55,33 @@ type PathSummary struct {
 	FileSizeSum uint64
 }
 
-func Summarize(idx *Index, filesystems []string, prefix string) PathSummary {
+func (p PathSummary) String() string {
+	return fmt.Sprintf("%d files, %s", p.FileCount, byteCountSI(p.FileSizeSum))
+}
+
+func byteCountSI(b uint64) string {
+	const unit = 1000
+	if b < unit {
+		return fmt.Sprintf("%d B", b)
+	}
+	div, exp := int64(unit), 0
+	for n := b / unit; n >= unit; n /= unit {
+		div *= unit
+		exp++
+	}
+	return fmt.Sprintf("%.1f %cB",
+		float64(b)/float64(div), "kMGTPE"[exp])
+}
+
+func Summarize(idx *Index, filesystem string, prefix string) PathSummary {
 	// If no filesystems are specified, search all filesystems:
-	if len(filesystems) == 0 {
-		idxFilesystems := idx.GetFilesystems()
-		filesystems = make([]string, 0, len(idxFilesystems))
-		for fs := range idxFilesystems {
+	var filesystems []string
+	if filesystem == "" {
+		for fs := range idx.GetFilesystems() {
 			filesystems = append(filesystems, fs)
 		}
+	} else {
+		filesystems = []string{filesystem}
 	}
 
 	blobs := NewBlobIndex(idx.GetBlobs())
