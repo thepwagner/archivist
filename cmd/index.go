@@ -25,8 +25,8 @@ func runIndex(run func(idx *archivist.Index, args []string) error) func(cmd *cob
 		signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 		go func() {
 			<-sigs
-			if !viper.GetBool("readonly") {
-				archivist.WriteProtoIndex(&idx, indexFn)
+			if err := writeIndex(idx, indexFn); err != nil {
+				logrus.WithError(err).Warn("Error writing index")
 			}
 			os.Exit(1)
 		}()
@@ -35,13 +35,18 @@ func runIndex(run func(idx *archivist.Index, args []string) error) func(cmd *cob
 		if err := run(&idx, args); err != nil {
 			return err
 		}
-		logrus.WithField("dur", time.Since(start).Truncate(time.Millisecond).Milliseconds()).Debug("Ran command")
+		logrus.WithField("dur", logDur(start)).Debug("Ran command")
 
-		if viper.GetBool("readonly") {
-			return nil
-		}
-		return archivist.WriteProtoIndex(&idx, indexFn)
+		return writeIndex(idx, indexFn)
 	}
+}
+
+func writeIndex(idx archivist.Index, indexFn string) error {
+	if viper.GetBool("readonly") {
+		logrus.Warn("Read-only mode, skipping index write")
+		return nil
+	}
+	return archivist.WriteProtoIndex(&idx, indexFn)
 }
 
 func runIndexRO(run func(idx *archivist.Index, args []string) error) func(cmd *cobra.Command, args []string) error {
@@ -57,8 +62,12 @@ func runIndexRO(run func(idx *archivist.Index, args []string) error) func(cmd *c
 		if err := run(&idx, args); err != nil {
 			return err
 		}
-		logrus.WithField("dur", time.Since(start).Truncate(time.Millisecond).Milliseconds()).Debug("Ran command")
+		logrus.WithField("dur", logDur(start)).Debug("Ran command")
 
 		return nil
 	}
+}
+
+func logDur(start time.Time) int64 {
+	return time.Since(start).Truncate(time.Millisecond).Milliseconds()
 }
