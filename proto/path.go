@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	tvRe    = regexp.MustCompile("tv/([A-Za-z0-9 ()]+)/")
-	movieRe = regexp.MustCompile("movies/([A-Za-z0-9 ()]+)/")
+	tvRe    = regexp.MustCompile("tv/([^/]+)/")
+	movieRe = regexp.MustCompile("movies/([^/]+)/")
 )
 
 // FindTV searches for a TV show in the archive.
