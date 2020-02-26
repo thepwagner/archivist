@@ -30,17 +30,22 @@ func Execute() {
 	}
 }
 
+const (
+	flagIndex    = "index"
+	flagReadOnly = "readonly"
+)
+
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.archivist.yaml)")
 
-	rootCmd.PersistentFlags().String("index", "", "index file")
-	viper.BindPFlag("index", rootCmd.PersistentFlags().Lookup("index"))
-	viper.SetDefault("index", "./index.pb")
+	rootCmd.PersistentFlags().String(flagIndex, "", "index file")
+	viper.BindPFlag(flagIndex, rootCmd.PersistentFlags().Lookup(flagIndex))
+	viper.SetDefault(flagIndex, "/Users/thepwagner/tmp/index")
 
-	rootCmd.PersistentFlags().Bool("readonly", false, "save updated index")
-	viper.BindPFlag("readonly", rootCmd.PersistentFlags().Lookup("readonly"))
-	viper.SetDefault("readonly", false)
+	rootCmd.PersistentFlags().Bool(flagReadOnly, false, "save updated index")
+	viper.BindPFlag(flagReadOnly, rootCmd.PersistentFlags().Lookup(flagReadOnly))
+	viper.SetDefault(flagReadOnly, false)
 }
 
 // initConfig reads in config file and ENV variables if set.

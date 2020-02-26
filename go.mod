@@ -9,6 +9,7 @@ require (
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/viper v1.3.2
-	github.com/stretchr/testify v1.2.2
-	golang.org/x/crypto v0.0.0-20181203042331-505ab145d0a9
+	github.com/stretchr/testify v1.3.0
+	golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4
+	gopkg.in/src-d/go-git.v4 v4.13.1
 )
