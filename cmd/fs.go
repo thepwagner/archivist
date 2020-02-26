@@ -31,6 +31,10 @@ func FilesystemList(idx *archivist.Index, out io.Writer) error {
 			return err
 		}
 	}
+	summary := archivist.Summarize(idx, "", "")
+	if _, err := fmt.Fprintf(out, "%-20s %s\n", "TOTAL", summary); err != nil {
+		return err
+	}
 	return nil
 }
 

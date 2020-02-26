@@ -2,6 +2,7 @@ package cmd_test
 
 import (
 	"bytes"
+	"io/ioutil"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -11,7 +12,7 @@ import (
 )
 
 func TestFilesystemList_NilSafe(t *testing.T) {
-	err := cmd.FilesystemList(nil, nil)
+	err := cmd.FilesystemList(nil, ioutil.Discard)
 	require.NoError(t, err)
 }
 
@@ -25,7 +26,8 @@ func TestFilesystemList_Empty(t *testing.T) {
 	var buf bytes.Buffer
 	err := cmd.FilesystemList(idx, &buf)
 	require.NoError(t, err)
-	assert.Equal(t, "/foo                 0 files, 0 B\n", buf.String())
+	assert.Equal(t, "/foo                 0 files, 0 B\n"+
+		"TOTAL                0 files, 0 B\n", buf.String())
 }
 
 func TestFilesystemList_Summary(t *testing.T) {
@@ -55,5 +57,6 @@ func TestFilesystemList_Summary(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t,
 		"/blob2               1 files, 2 B\n"+
-			"/blob5               2 files, 5 B\n", buf.String())
+			"/blob5               2 files, 5 B\n"+
+			"TOTAL                3 files, 7 B\n", buf.String())
 }

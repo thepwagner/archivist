@@ -11,8 +11,7 @@ import (
 
 var lsCmd = &cobra.Command{
 	Use:   "ls [path]",
-	Short: "List merged index",
-
+	Short: "List merged filesystem",
 	RunE: runIndexRO(func(idx *archivist.Index, args []string) error {
 		var prefix string
 		if len(args) > 0 {

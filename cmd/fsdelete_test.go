@@ -33,5 +33,6 @@ func TestFilesystemDelete(t *testing.T) {
 	require.NoError(t, err)
 	assert.NotContains(t, idx.Filesystems, "foo")
 	assert.Contains(t, idx.Filesystems, "bar")
-	assert.Equal(t, "bar                  0 files, 0 B\n", buf.String())
+	assert.Equal(t, "bar                  0 files, 0 B\n"+
+		"TOTAL                0 files, 0 B\n", buf.String())
 }
