@@ -49,6 +49,16 @@ func runIndex(run func(idx *archivist.Index, args []string) error) func(cmd *cob
 			os.Exit(1)
 		}()
 
+		defer func() {
+			if err := recover(); err != nil {
+				logrus.WithField("err", err).Error("caught panic")
+				if err := writeIndex(idx, indexFile, wt, message); err != nil {
+					logrus.WithError(err).Warn("Error writing index")
+				}
+				os.Exit(1)
+			}
+		}()
+
 		start := time.Now()
 		if err := run(&idx, args); err != nil {
 			return err
