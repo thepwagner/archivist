@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/sirupsen/logrus"
@@ -41,7 +42,11 @@ func init() {
 
 	rootCmd.PersistentFlags().String(flagIndex, "", "index file")
 	viper.BindPFlag(flagIndex, rootCmd.PersistentFlags().Lookup(flagIndex))
-	viper.SetDefault(flagIndex, "/Users/thepwagner/tmp/index")
+	home, err := os.UserHomeDir()
+	if err != nil {
+		panic(err)
+	}
+	viper.SetDefault(flagIndex, filepath.Join(home, ".archivist"))
 
 	rootCmd.PersistentFlags().Bool(flagReadOnly, false, "save updated index")
 	viper.BindPFlag(flagReadOnly, rootCmd.PersistentFlags().Lookup(flagReadOnly))
