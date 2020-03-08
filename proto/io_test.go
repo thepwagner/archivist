@@ -16,7 +16,7 @@ func TestWriteProtoIndex(t *testing.T) {
 
 	stat, err := os.Stat(tmp.Name())
 	require.NoError(t, err)
-	assert.Equal(t, int64(5), stat.Size())
+	assert.Equal(t, int64(22), stat.Size())
 }
 
 func TestReadProtoIndex(t *testing.T) {

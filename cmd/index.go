@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/signal"
@@ -17,7 +18,10 @@ import (
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
 )
 
-const indexFilename = "index.pb"
+const (
+	indexProtoFilename = "index.pb"
+	indexFilename      = "index.json"
+)
 
 func runIndex(run func(idx *archivist.Index, args []string) error) func(cmd *cobra.Command, args []string) error {
 	return func(_ *cobra.Command, args []string) error {
@@ -31,10 +35,16 @@ func runIndex(run func(idx *archivist.Index, args []string) error) func(cmd *cob
 			return fmt.Errorf("getting repo worktree: %w", err)
 		}
 
-		indexFile := filepath.Join(indexPath, indexFilename)
 		var idx archivist.Index
+		indexFile := filepath.Join(indexPath, indexFilename)
 		if err := archivist.ReadProtoIndex(indexFile, &idx); err != nil {
-			return err
+			if !errors.Is(err, os.ErrNotExist) {
+				return err
+			}
+			indexProtoFile := filepath.Join(indexPath, indexProtoFilename)
+			if err := archivist.ReadProtoIndex(indexProtoFile, &idx); err != nil {
+				return err
+			}
 		}
 
 		message := strings.Join(os.Args[1:], " ")
