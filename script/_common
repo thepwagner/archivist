@@ -1,0 +1,6 @@
+export BUF_IMAGE_NAME=archivist/buf
+
+function build_buf() {
+  cd "${ROOT}/script/tools/buf"
+  docker build -t "$BUF_IMAGE_NAME" .
+}

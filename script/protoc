@@ -2,4 +2,15 @@
 
 set -e
 
-protoc --go_out=paths=source_relative:. proto/*.proto
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+. "${ROOT}/script/_common"
+
+build_buf
+set -x
+
+# use a shell as buf directly won't glob files
+exec docker run --rm \
+  -v "${ROOT}:/src" \
+  -w "/src" \
+  "$BUF_IMAGE_NAME" \
+  sh -c "buf protoc --go_out=paths=source_relative:. proto/*.proto"

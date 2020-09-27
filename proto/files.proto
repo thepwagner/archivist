@@ -18,11 +18,13 @@ message Blob {
     Integrity integrity = 3;
 }
 
+// File is a Blob observed a particular time.
 message File {
     string blob_id = 1;
     google.protobuf.Timestamp mod_time = 2;
 }
 
+// Filesystem is an index of Files.
 message Filesystem {
     map<string, File> paths = 1;
 }

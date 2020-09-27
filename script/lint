@@ -1,5 +1,14 @@
-#!/bin/sh
+#!/bin/sh -e
 
-set -e
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+. "${ROOT}/script/_common"
 
-buf check lint
+build_buf
+
+set -x
+exec docker run --rm \
+  -v "${ROOT}:/src:ro" \
+  -w "/src" \
+  "$BUF_IMAGE_NAME" \
+  buf check lint
+
