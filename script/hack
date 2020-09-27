@@ -1,6 +1,0 @@
-#!/bin/sh
-
-set -ex
-GOOS=linux go build -o archivist .
-
-scp archivist data:bin/
