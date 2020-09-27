@@ -3,4 +3,4 @@
 set -ex
 GOOS=linux go build -o archivist .
 
-scp archivist data:
+scp archivist data:bin/
