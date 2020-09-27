@@ -1,7 +1,5 @@
 # TODO
 
-- compress index?
-- encrypt (compressed) index?
 - bring back drive/health/age tracking
     - hrrd while using WSL (no smartctl)
 - parse .nfo files for show/movie metadata (reindex)
