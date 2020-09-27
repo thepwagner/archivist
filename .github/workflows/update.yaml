@@ -15,4 +15,7 @@ jobs:
       - uses: thepwagner/action-update-go@main
         with:
           log_level: debug
-
+      - uses: thepwagner/action-update-go@input-updater
+        with:
+          log_level: debug
+          updater: dockerurl
