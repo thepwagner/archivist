@@ -13,7 +13,7 @@ RUN go build -o /protoc-gen-go github.com/golang/protobuf/protoc-gen-go
 FROM alpine:3.11
 
 ARG BUF_VERSION=v0.24.0
-ARG BUF_CHECKSUM=c5a6e7784b5763d66f1b296b2579b21e5df3261a3865a6d9ccafbeaa42b77562
+ARG BUF_CHECKSUM=656b9e223fc1361734ffe5cc015d375152a7e0c11610210f700f6a027eb4cecb
 
 ARG BUFF_URL=https://github.com/bufbuild/buf/releases/download/${BUF_VERSION}/buf-Linux-x86_64
 RUN apk --no-cache add --virtual .build curl \
