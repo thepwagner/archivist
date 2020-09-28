@@ -119,10 +119,10 @@ func AddBlob(idx *archivist.Index, path string, info os.FileInfo) (*archivist.Bl
 	blobBlake2b := integrity.GetBlake2B512()
 	for _, b := range idx.Blobs {
 		indexedBlob := b.GetIntegrity()
-		if bytes.Compare(indexedBlob.GetSha512(), blobSha) != 0 {
+		if !bytes.Equal(indexedBlob.GetSha512(), blobSha) {
 			continue
 		}
-		if bytes.Compare(indexedBlob.GetBlake2B512(), blobBlake2b) != 0 {
+		if !bytes.Equal(indexedBlob.GetBlake2B512(), blobBlake2b) {
 			continue
 		}
 		log.WithField("blob_id", b.Id).Debug("Blob exists in index")

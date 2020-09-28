@@ -41,7 +41,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.archivist.yaml)")
 
 	rootCmd.PersistentFlags().String(flagIndex, "", "index file")
-	viper.BindPFlag(flagIndex, rootCmd.PersistentFlags().Lookup(flagIndex))
+	_ = viper.BindPFlag(flagIndex, rootCmd.PersistentFlags().Lookup(flagIndex))
 	home, err := os.UserHomeDir()
 	if err != nil {
 		panic(err)
@@ -49,7 +49,7 @@ func init() {
 	viper.SetDefault(flagIndex, filepath.Join(home, ".archivist"))
 
 	rootCmd.PersistentFlags().Bool(flagReadOnly, false, "save updated index")
-	viper.BindPFlag(flagReadOnly, rootCmd.PersistentFlags().Lookup(flagReadOnly))
+	_ = viper.BindPFlag(flagReadOnly, rootCmd.PersistentFlags().Lookup(flagReadOnly))
 	viper.SetDefault(flagReadOnly, false)
 }
 
