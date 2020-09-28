@@ -2,6 +2,7 @@
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 . "${ROOT}/script/_common"
+
 lint_buf() {
   build_buf buf
   docker run --rm \
@@ -12,7 +13,7 @@ lint_buf() {
 }
 
 LINT_IMAGE_NAME=archivist/lint
-lint_buf() {
+lint_golangci() {
   cd "${ROOT}/script/tools/golangci-lint"
   docker build -t "$LINT_IMAGE_NAME" .
   docker run --rm \
