@@ -3,7 +3,7 @@
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 . "${ROOT}/script/_common"
 
-build_buf
+build_buf buf
 
 set -x
 exec docker run --rm \
