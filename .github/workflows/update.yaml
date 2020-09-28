@@ -17,9 +17,7 @@ jobs:
       - uses: thepwagner/action-update-go@main
         with:
           log_level: debug
-          token: ${{ secrets.MY_GITHUB_PAT }}
       - uses: thepwagner/action-update-go@main
         with:
           log_level: debug
           updater: dockerurl
-          token: ${{ secrets.MY_GITHUB_PAT }}
