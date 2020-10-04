@@ -14,7 +14,7 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: '1.15.0'
-      - uses: thepwagner/action-update-dockerurl@import
+      - uses: thepwagner/action-update-dockerurl@main
         with:
           log_level: debug
           token: ${{ secrets.MY_GITHUB_PAT }} 
