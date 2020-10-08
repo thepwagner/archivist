@@ -17,7 +17,11 @@ jobs:
       - uses: thepwagner/action-update-dockerurl@main
         with:
           log_level: debug
-          token: ${{ secrets.MY_GITHUB_PAT }} 
+          token: ${{ secrets.MY_GITHUB_PAT }}
+          groups: |
+            - name: buf
+              pattern: github.com/bufbuild/buf
+              post-script: script/protoc
       - uses: thepwagner/action-update-go@main
         with:
           log_level: debug
