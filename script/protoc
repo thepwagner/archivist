@@ -13,4 +13,4 @@ exec docker run --rm \
   -v "${ROOT}:/src" \
   -w "/src" \
   "$BUF_IMAGE_NAME" \
-  sh -c "buf protoc --go_out=paths=source_relative:. proto/*.proto"
+  sh -c "buf protoc --go_out=paths=source_relative:/src proto/*.proto"
