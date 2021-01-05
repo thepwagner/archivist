@@ -1,7 +1,7 @@
 FROM alpine:3.11 AS buf
 
-ARG BUF_VERSION=v0.33.0
-ARG BUF_CHECKSUM=977930427bb6b962492586bb6d43c038bfb383dd82933ef28ebcb1a780263f9b
+ARG BUF_VERSION=v0.34.0
+ARG BUF_CHECKSUM=bc3a091f6901724b13e3cb8ff2c4df67617887cc14f3297b7b72d359c9568e01
 
 ARG BUFF_URL=https://github.com/bufbuild/buf/releases/download/${BUF_VERSION}/buf-Linux-x86_64
 RUN apk --no-cache add --virtual .build curl \
