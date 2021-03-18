@@ -48,8 +48,8 @@ func SyncFilesystem(idx *archivist.Index, root string) error {
 		// If file exists with the same size+mtime, skip integrity calculation:
 		if oldFile, ok := oldPaths[pathRel]; ok {
 			// Compare mtime first:
-			oldFileModTime, err := ptypes.Timestamp(oldFile.GetModTime())
-			if err == nil && oldFileModTime == info.ModTime().UTC() {
+			oldFileModTime := oldFile.GetModTime().AsTime()
+			if oldFileModTime == info.ModTime().UTC() {
 				oldBlobID := oldFile.GetBlobId()
 				if oldBlob, ok := blobs.ByID[oldBlobID]; ok {
 					if oldBlob.Size == uint64(info.Size()) {
