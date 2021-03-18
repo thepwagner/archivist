@@ -13,7 +13,7 @@ jobs:
           token: ${{ secrets.MY_GITHUB_PAT }}
       - uses: actions/setup-go@v2
         with:
-          go-version: '1.15.0'
+          go-version: '1.16.2'
       - uses: thepwagner/action-update-dockerurl@main
         with:
           log_level: debug
@@ -25,5 +25,8 @@ jobs:
       - uses: thepwagner/action-update-go@main
         with:
           log_level: debug
-          token: ${{ secrets.MY_GITHUB_PAT }} 
-
+          token: ${{ secrets.MY_GITHUB_PAT }}
+      - uses: thepwagner/action-update-docker@main
+        with:
+          log_level: debug
+          token: ${{ secrets.MY_GITHUB_PAT }}
