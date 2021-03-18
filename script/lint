@@ -9,7 +9,7 @@ lint_buf() {
     -v "${ROOT}:/src:ro" \
     -w "/src" \
     "$BUF_IMAGE_NAME" \
-    buf check lint
+    buf lint
 }
 
 LINT_IMAGE_NAME=archivist/lint
