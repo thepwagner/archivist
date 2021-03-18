@@ -7,11 +7,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/golang/protobuf/ptypes"
 	uuid "github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	archivist "github.com/thepwagner/archivist/proto"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func SyncFilesystem(idx *archivist.Index, root string) error {
@@ -48,8 +48,8 @@ func SyncFilesystem(idx *archivist.Index, root string) error {
 		// If file exists with the same size+mtime, skip integrity calculation:
 		if oldFile, ok := oldPaths[pathRel]; ok {
 			// Compare mtime first:
-			oldFileModTime, err := ptypes.Timestamp(oldFile.GetModTime())
-			if err == nil && oldFileModTime == info.ModTime().UTC() {
+			oldFileModTime := oldFile.GetModTime().AsTime()
+			if oldFileModTime == info.ModTime().UTC() {
 				oldBlobID := oldFile.GetBlobId()
 				if oldBlob, ok := blobs.ByID[oldBlobID]; ok {
 					if oldBlob.Size == uint64(info.Size()) {
@@ -77,10 +77,7 @@ func SyncFilesystem(idx *archivist.Index, root string) error {
 			return fmt.Errorf("adding blob %q: %w", path, err)
 		}
 		log.WithField("blob_id", blob.Id).Debug("Indexed new path")
-		modTime, err := ptypes.TimestampProto(info.ModTime())
-		if err != nil {
-			return err
-		}
+		modTime := timestamppb.New(info.ModTime())
 
 		newPaths[pathRel] = &archivist.File{
 			BlobId:  blob.Id,
