@@ -11,6 +11,6 @@ COPY . .
 ARG CGO_ENABLED=0
 RUN go build -o /archivist .
 
-FROM alpine:3.13.2
+FROM alpine:3.13.3
 COPY --from=builder /archivist /usr/local/bin
 ENTRYPOINT ["/usr/local/bin/archivist"]
