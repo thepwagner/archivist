@@ -11,7 +11,7 @@ RUN apk --no-cache add --virtual .build curl \
   && apk del .build
 
 
-FROM golang:1.16.6 AS protoc-gen-go
+FROM golang:1.16.7 AS protoc-gen-go
 RUN mkdir /app
 WORKDIR /app
 COPY go.mod .
