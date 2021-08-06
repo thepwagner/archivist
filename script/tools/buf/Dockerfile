@@ -1,4 +1,4 @@
-FROM alpine:3.14.0 AS buf
+FROM alpine:3.14.0@sha256:adab3844f497ab9171f070d4cae4114b5aec565ac772e2f2579405b78be67c96 AS buf
 
 ARG BUF_VERSION=v0.48.2
 ARG BUF_CHECKSUM=c64901dfaa9d7dd5ffa9260e2a0c08dec9d2df7a142e617be388b55ff0176d6f
@@ -11,7 +11,7 @@ RUN apk --no-cache add --virtual .build curl \
   && apk del .build
 
 
-FROM golang:1.16.7 AS protoc-gen-go
+FROM golang:1.16.7@sha256:5cdc91c9e67e7b95ef5a1c9156af24aaccbb4e339799efd441fd7e961b3e2e75 AS protoc-gen-go
 RUN mkdir /app
 WORKDIR /app
 COPY go.mod .
