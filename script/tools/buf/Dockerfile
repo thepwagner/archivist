@@ -1,8 +1,8 @@
 FROM alpine:3.14.1@sha256:eb3e4e175ba6d212ba1d6e04fc0782916c08e1c9d7b45892e9796141b1d379ae AS buf
 
 # renovate: datasource=github-releases depName=bufbuild/buf versioning=semver
-ARG BUF_VERSION=v0.50.0
-ARG BUF_CHECKSUM=ce906fa2fc699142926cc798ffaf5be125464c7601558490924adbec0ee1f250
+ARG BUF_VERSION=v0.51.0
+ARG BUF_CHECKSUM=efca5818b60153ec340c4824df4081a08774af0bf30644f967241018c0d60674
 
 ARG BUFF_URL=https://github.com/bufbuild/buf/releases/download/${BUF_VERSION}/buf-Linux-x86_64
 RUN apk --no-cache add --virtual .build curl \
