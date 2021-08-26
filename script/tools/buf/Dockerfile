@@ -8,7 +8,7 @@ ARG BUF_MINISIGN_KEY=RWQ/i9xseZwBVE7pEniCNjlNOeeyp4BQgdZDLQcAohxEAH5Uj5DEKjv6
 ARG BUFF_URL=https://github.com/bufbuild/buf/releases/download/${BUF_VERSION}/buf-Linux-x86_64
 ARG BUFF_DIGESTS_URL=https://github.com/bufbuild/buf/releases/download/${BUF_VERSION}/sha256.txt
 RUN apk --no-cache add curl \
-  && apk --no-cached --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing add minisign \
+  && apk --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing add minisign \
   && mkdir -p /buf \
   && curl -Lo /buf/sha256.txt "$BUFF_DIGESTS_URL" \
   && curl -Lo /buf/sha256.txt.minisig "$BUFF_DIGESTS_URL.minisig" \
