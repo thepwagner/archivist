@@ -1,4 +1,4 @@
-FROM golang:1.17.0@sha256:33ef0040801bb4deabe1db381ee92de1afc81b869ce27d52fb52d24cf37ff543 AS builder
+FROM golang:1.17.0@sha256:60ab4da0dfb710530f7f81b14362b110154fd26c1d22ff0292b9eb30c54f2299 AS builder
 
 RUN mkdir /app
 WORKDIR /app
