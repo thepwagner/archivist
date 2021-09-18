@@ -1,3 +1,7 @@
+presets:
+- github.com/thepwagner/golangci-lint-yaml
+
 linters:
   disable:
   - govet
+  - gochecknoinits

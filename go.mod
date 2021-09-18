@@ -36,6 +36,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/src-d/gcfg v1.4.0 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
+	github.com/thepwagner/golangci-lint-yaml v0.0.1 // indirect
 	github.com/xanzy/ssh-agent v0.2.1 // indirect
 	golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4 // indirect
 	golang.org/x/sys v0.0.0-20210615035016-665e8c7367d1 // indirect
