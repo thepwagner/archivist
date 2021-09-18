@@ -93,7 +93,7 @@ func Summarize(idx *Index, filesystem string, prefix string) PathSummary {
 			if !strings.HasPrefix(p, prefix) {
 				continue
 			}
-			res.FileCount += 1
+			res.FileCount++
 			res.FileSizeSum += blobs.ByID[f.BlobId].Size
 		}
 	}

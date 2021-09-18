@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -63,7 +64,7 @@ func repoPull(ctx context.Context, repo *git.Repository) error {
 		RemoteName: remoteName,
 		Progress:   os.Stdout,
 	})
-	if err != nil && err != git.NoErrAlreadyUpToDate {
+	if err != nil && !errors.Is(err, git.NoErrAlreadyUpToDate) {
 		return fmt.Errorf("pulling remote: %w", err)
 	}
 	return nil

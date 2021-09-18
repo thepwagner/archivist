@@ -11,6 +11,8 @@ import (
 	archivist "github.com/thepwagner/archivist/proto"
 )
 
+const lineSplitLen = 8
+
 var dupesCmd = &cobra.Command{
 	Use:   "dupes",
 	Short: "Find duplicate data",
@@ -60,7 +62,7 @@ func reportDupes(idx *archivist.Index, out io.Writer, details bool, dupes map[st
 	}
 	if len(names) > 0 {
 		_, _ = fmt.Fprintf(out, "%s Results\n", strings.Title(mediaType))
-		_, _ = fmt.Fprintln(out, strings.Repeat("-", len(mediaType)+8))
+		_, _ = fmt.Fprintln(out, strings.Repeat("-", len(mediaType)+lineSplitLen))
 		sort.Strings(names)
 		for _, show := range names {
 			if details {

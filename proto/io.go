@@ -11,6 +11,8 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+const indexPerms = 0600
+
 func WriteProtoIndex(data proto.Message, path string) error {
 	start := time.Now()
 
@@ -28,7 +30,7 @@ func WriteProtoIndex(data proto.Message, path string) error {
 		}
 	}
 
-	if err := ioutil.WriteFile(path, b, 0600); err != nil {
+	if err := ioutil.WriteFile(path, b, indexPerms); err != nil {
 		return fmt.Errorf("writing index: %w", err)
 	}
 	logrus.WithField("dur", time.Since(start).Truncate(time.Millisecond).Milliseconds()).Debug("Wrote index")

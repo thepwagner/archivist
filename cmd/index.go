@@ -103,7 +103,7 @@ func commitIndex(wt *git.Worktree, message string) error {
 		},
 	})
 	if err != nil {
-		return fmt.Errorf("commiting index: %w", err)
+		return fmt.Errorf("committing index: %w", err)
 	}
 	logrus.WithFields(logrus.Fields{
 		"commit_id": commit.String(),

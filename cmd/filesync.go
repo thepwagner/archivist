@@ -56,12 +56,11 @@ func SyncFilesystem(idx *archivist.Index, root string) error {
 						log.WithField("blob_id", oldBlobID).Debug("Path matched existing blob")
 						newPaths[pathRel] = oldFile
 						return nil
-					} else {
-						log.WithFields(logrus.Fields{
-							"existing_size": oldBlob.Size,
-							"size":          uint64(info.Size()),
-						}).Debug("Path exists but has different size")
 					}
+					log.WithFields(logrus.Fields{
+						"existing_size": oldBlob.Size,
+						"size":          uint64(info.Size()),
+					}).Debug("Path exists but has different size")
 				}
 			} else {
 				log.WithFields(logrus.Fields{
