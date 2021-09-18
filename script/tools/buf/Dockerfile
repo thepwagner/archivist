@@ -1,14 +1,14 @@
-FROM alpine:3.14.1@sha256:eb3e4e175ba6d212ba1d6e04fc0782916c08e1c9d7b45892e9796141b1d379ae AS buf
+FROM alpine:3.14.2@sha256:e1c082e3d3c45cccac829840a25941e679c25d438cc8412c2fa221cf1a824e6a AS buf
 
 # renovate: datasource=github-releases depName=bufbuild/buf versioning=semver
-ARG BUF_VERSION=v0.52.0
-ARG BUF_CHECKSUM=dfa0e0d5c4784b2f8e34402b1c427ce71822d6dfaa55d1bce919bc33e4dee488
+ARG BUF_VERSION=v1.0.0-rc1
+ARG BUF_CHECKSUM=b6fec65811c3ba4be56354cb7844fcb0eb977810d58a32dbcc6f0d0a0bf3174f
 
 ARG BUF_MINISIGN_KEY=RWQ/i9xseZwBVE7pEniCNjlNOeeyp4BQgdZDLQcAohxEAH5Uj5DEKjv6
 ARG BUFF_URL=https://github.com/bufbuild/buf/releases/download/${BUF_VERSION}/buf-Linux-x86_64
 ARG BUFF_DIGESTS_URL=https://github.com/bufbuild/buf/releases/download/${BUF_VERSION}/sha256.txt
 RUN apk --no-cache add curl \
-  && apk --no-cached --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing add minisign \
+  && apk --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing add minisign \
   && mkdir -p /buf \
   && curl -Lo /buf/sha256.txt "$BUFF_DIGESTS_URL" \
   && curl -Lo /buf/sha256.txt.minisig "$BUFF_DIGESTS_URL.minisig" \
@@ -19,7 +19,7 @@ RUN apk --no-cache add curl \
   && chmod +x /usr/local/bin/buf \
   && apk del curl minisign
 
-FROM golang:1.17.0@sha256:634cda4edda00e59167e944cdef546e2d62da71ef1809387093a377ae3404df0 AS protoc-gen-go
+FROM golang:1.17.1@sha256:285cf0cb73ab995caee61b900b2be123cd198f3541ce318c549ea5ff9832bdf0 AS protoc-gen-go
 RUN mkdir /app
 WORKDIR /app
 COPY go.mod .
