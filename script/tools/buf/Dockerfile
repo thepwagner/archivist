@@ -19,7 +19,7 @@ RUN apk --no-cache add curl \
   && chmod +x /usr/local/bin/buf \
   && apk del curl minisign
 
-FROM golang:1.17.2@sha256:45d45a39258425b0386643efc863b3b3c1481173d64ec6151b18d48b565df9a0 AS protoc-gen-go
+FROM golang:1.17.2@sha256:465fd704217b18d349f1b675c34870ab594d7a0505fb2d55cf6a83298f237a8b AS protoc-gen-go
 RUN mkdir /app
 WORKDIR /app
 COPY go.mod .
