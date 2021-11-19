@@ -8,7 +8,7 @@ ARG BUF_MINISIGN_KEY=RWQ/i9xseZwBVE7pEniCNjlNOeeyp4BQgdZDLQcAohxEAH5Uj5DEKjv6
 ARG BUFF_URL=https://github.com/bufbuild/buf/releases/download/${BUF_VERSION}/buf-Linux-x86_64
 ARG BUFF_DIGESTS_URL=https://github.com/bufbuild/buf/releases/download/${BUF_VERSION}/sha256.txt
 RUN apk --no-cache add curl \
-  && apk --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing add minisign \
+  && apk --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community add minisign \
   && mkdir -p /buf \
   && curl -Lo /buf/sha256.txt "$BUFF_DIGESTS_URL" \
   && curl -Lo /buf/sha256.txt.minisig "$BUFF_DIGESTS_URL.minisig" \
@@ -19,7 +19,7 @@ RUN apk --no-cache add curl \
   && chmod +x /usr/local/bin/buf \
   && apk del curl minisign
 
-FROM golang:1.17.3@sha256:b29b38c8ccc4d755873e4bfb9cdc0e9bfcbdd48d62976fc80cf7082ec859d901 AS protoc-gen-go
+FROM golang:1.17.3@sha256:4f0671cf24397b6f98013bfc47882d4299573639c3714825297ddbd4b621ee92 AS protoc-gen-go
 RUN mkdir /app
 WORKDIR /app
 COPY go.mod .
