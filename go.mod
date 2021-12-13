@@ -8,7 +8,7 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cobra v1.2.1
-	github.com/spf13/viper v1.9.0
+	github.com/spf13/viper v1.10.0
 	github.com/stretchr/testify v1.7.0
 	golang.org/x/crypto v0.0.0-20211209193657-4570a0811e8b
 	google.golang.org/protobuf v1.27.1
@@ -24,8 +24,8 @@ require (
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
 	github.com/kevinburke/ssh_config v0.0.0-20190725054713-01f96b0aa0cd // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
-	github.com/mitchellh/mapstructure v1.4.2 // indirect
-	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect
+	github.com/mitchellh/mapstructure v1.4.3 // indirect
+	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml v1.9.4 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
@@ -38,9 +38,9 @@ require (
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/xanzy/ssh-agent v0.2.1 // indirect
 	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2 // indirect
-	golang.org/x/sys v0.0.0-20210823070655-63515b42dcdf // indirect
-	golang.org/x/text v0.3.6 // indirect
-	gopkg.in/ini.v1 v1.63.2 // indirect
+	golang.org/x/sys v0.0.0-20211205182925-97ca703d548d // indirect
+	golang.org/x/text v0.3.7 // indirect
+	gopkg.in/ini.v1 v1.66.2 // indirect
 	gopkg.in/src-d/go-billy.v4 v4.3.2 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
