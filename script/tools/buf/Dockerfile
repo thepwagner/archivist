@@ -1,4 +1,4 @@
-FROM alpine:3.15.1@sha256:47a7879a9669017ef7bc5c3ecca6feb81b018106b6a9eaff2f51417569827d33 AS buf
+FROM alpine:3.15.1@sha256:d6d0a0eb4d40ef96f2310ead734848b9c819bb97c9d846385c4aca1767186cd4 AS buf
 
 # renovate: datasource=github-releases depName=bufbuild/buf versioning=semver
 ARG BUF_VERSION=v1.1.0
