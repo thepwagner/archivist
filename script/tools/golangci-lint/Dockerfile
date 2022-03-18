@@ -1,3 +1,3 @@
-FROM golangci/golangci-lint:v1.44.2-alpine@sha256:b5904c209d7d593cbec0c096033f2c86340d1d3fd26ae78030314f59f5ce720f
+FROM golangci/golangci-lint:v1.45.0-alpine@sha256:e2e0e2d5016a35e80cce1c78f294384e006f4dd9e36fe39f8792a22c5ebd58e5
 
 ENTRYPOINT ["/usr/bin/golangci-lint","run"]
