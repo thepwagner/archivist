@@ -1,8 +1,8 @@
 FROM alpine:3.15.2@sha256:ceeae2849a425ef1a7e591d8288f1a58cdf1f4e8d9da7510e29ea829e61cf512 AS buf
 
 # renovate: datasource=github-releases depName=bufbuild/buf versioning=semver
-ARG BUF_VERSION=v1.2.1
-ARG BUF_CHECKSUM=8dcf89e66e645300de5dfdba31c11aafb3d34257903a3a9f5a565060b43163c8
+ARG BUF_VERSION=v1.3.0
+ARG BUF_CHECKSUM=44632fc54cfad3b040c824ef0a8d6351359191954f766b92810a521c1866b3ca
 
 ARG BUF_MINISIGN_KEY=RWQ/i9xseZwBVE7pEniCNjlNOeeyp4BQgdZDLQcAohxEAH5Uj5DEKjv6
 ARG BUFF_URL=https://github.com/bufbuild/buf/releases/download/${BUF_VERSION}/buf-Linux-x86_64
